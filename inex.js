@@ -6,6 +6,7 @@ import fs from "fs/promises";
 import path from "path";
 import https from "https";
 import cors from "cors";
+import { readFileSync } from "fs";
 
 // --- Configuration ---
 const PORT = process.env.PORT || 3000;
@@ -732,9 +733,18 @@ setInterval(async () => {
     await loadPendingKeys().then(savePendingKeys);
     await loadPhoneToApiKeyMap().then(savePhoneToApiKeyMap);
     await restoreBotSessions();
-    app.listen(PORT, () => {
-      console.log(`🚀 API server ทำงานที่ port ${PORT}`);
-      console.log(`🔗 ทดสอบ: http://localhost:${PORT}/submit-phone`);
+
+    // SSL configuration
+    const sslOptions = {
+      cert: readFileSync('/etc/letsencrypt/live/menu.panelaimbot.com/fullchain.pem'),
+      key: readFileSync('/etc/letsencrypt/live/menu.panelaimbot.com/privkey.pem')
+    };
+
+    // Create HTTPS server
+    const server = https.createServer(sslOptions, app);
+    server.listen(PORT, () => {
+      console.log(`🚀 HTTPS server ทำงานที่ port ${PORT}`);
+      console.log(`🔗 ทดสอบ: https://menu.panelaimbot.com:${PORT}/submit-phone`);
     });
   } catch (error) {
     console.error("❌ เกิดข้อผิดพลาดร้ายแรงในการ khởi độngระบบ:", error);
