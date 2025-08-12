@@ -9,7 +9,7 @@ import cors from "cors";
 import { readFileSync } from "fs";
 
 // --- Configuration ---
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const API_ID = 25596034; // Replace with your API_ID
 const API_HASH = "1492ef7644047f8a6170cdaa9b5c356f"; // Replace with your API_HASH
 
